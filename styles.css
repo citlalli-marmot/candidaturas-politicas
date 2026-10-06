@@ -24,8 +24,10 @@ body {
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-.screen { display: none; }
-.screen.active { display: block; }
+/* AQUÍ ESTÁ LA SOLUCIÓN AL BUG DE PANTALLAS ENCIMADAS */
+.screen { display: none !important; }
+.screen.active { display: block !important; }
+.screen.active.flex-container { display: flex !important; }
 
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-pastel), var(--secondary-pastel));
@@ -122,12 +124,3 @@ input[type=range]::-webkit-slider-runnable-track {
     opacity: 0;
     pointer-events: none;
 }
-
-        .slider-value-hidden {
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        
-        .slider-value-visible {
-            opacity: 1;
-        }
