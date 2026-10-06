@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estudio de Juicios de Confiabilidad - UNAM</title>
+    <!-- Cargando Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+  
+</head>
+<body class="min-h-screen flex items-center justify-center p-4 sm:p-8">
+
+    <main class="w-full max-w-2xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden relative min-h-[500px]">
+        
+        <!-- PANTALLA DE INICIO (Portada) -->
+        <section id="screen-cover" class="screen active p-8 sm:p-12 h-full flex flex-col justify-center
+items-center text-center animate-fade-in-up">
+            <div class="mb-8">
+                <h2 class="text-sm font-semibold tracking-widest text-gray-400 uppercase mb-2">Universidad Nacional Autónoma de México</h2>
+                <h3 class="text-xs font-medium tracking-wider text-gray-400 uppercase">Facultad de Psicología</h3>
+            </div>
+            
+            <div class="my-8">
+                <div class="w-20 h-1 bg-gradient-to-r from-[#a7c7e7] to-[#c3b1e1] mx-auto rounded-full mb-8"></div>
+                <h1 class="text-3xl sm:text-4xl font-bold leading-tight mb-6 text-gray-800">
+                    Evolución de los juicios de confiabilidad sobre candidaturas políticas ante flujos secuenciales de información
+                </h1>
+                <div class="w-20 h-1 bg-gradient-to-r from-[#a7c7e7] to-[#c3b1e1] mx-auto rounded-full mt-8"></div>
+            </div>
+
+            <div class="mt-8 mb-10">
+                <p class="text-sm text-gray-500">Investigadora responsable:</p>
+                <p class="text-lg font-medium text-gray-700">Atzin Citlalli Zavala García</p>
+            </div>
+
+            <button onclick="switchScreen('screen-phase0')" class="btn-primary w-full sm:w-auto px-10 py-4 rounded-2xl text-lg mt-auto">
+                Comenzar Estudio
+            </button>
+        </section>
+
+        <!-- FASE 0: Cuestionario Inicial -->
+        <section id="screen-phase0" class="screen p-8 sm:p-12 animate-fade-in-up">
+            <h2 class="text-2xl font-bold mb-6 text-center">Fase 0: Cuestionario Inicial</h2>
+            
+            <div class="space-y-6">
+                <!-- Consentimiento -->
+                <div class="bg-blue-50 p-4 rounded-2xl text-sm text-gray-600 mb-6">
+                    <p class="mb-3"><strong>Consentimiento Informado:</strong> Tu participación es voluntaria y anónima. Los datos recabados serán utilizados únicamente con fines de investigación académica.</p>
+                    <label class="flex items-center space-x-3 cursor-pointer">
+                        <input type="checkbox" id="consent-check" class="w-5 h-5 text-blue-500 rounded border-gray-300 focus:ring-blue-400" onchange="validatePhase0()">
+                        <span class="text-gray-700 font-medium">He leído y acepto participar en el estudio.</span>
+                    </label>
+                </div>
+
+                <!-- Edad -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Edad (entre 18 y 25 años)</label>
+                    <input type="number" id="age-input" min="18" max="25" class="input-ios" placeholder="Ingresa tu edad" oninput="validatePhase0()">
+                </div>
+
+                <!-- Ideología -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Autoubicación Ideológica</label>
+                    <p class="text-xs text-gray-500 mb-4">Mueve el deslizador desde Izquierda (0) hasta Derecha (10).</p>
+                    <input type="range" id="ideology-slider" min="0" max="10" value="5" class="w-full">
+                    <div class="flex justify-between text-xs text-gray-500 mt-2 font-medium">
+                        <span>Izquierda (0)</span>
+                        <span>Centro (5)</span>
+                        <span>Derecha (10)</span>
+                    </div>
+                </div>
+
+                <!-- Postura Aborto -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Postura sobre el aborto</label>
+                    <select id="abortion-stance" class="input-ios" onchange="validatePhase0()">
+                        <option value="">Selecciona una opción...</option>
+                        <option value="a_favor">Totalmente a favor</option>
+                        <option value="parcial_favor">Parcialmente a favor</option>
+                        <option value="parcial_contra">Parcialmente en contra</option>
+                        <option value="en_contra">Totalmente en contra</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-10 text-right">
+                <button id="btn-phase0-next" disabled onclick="startPhase1()" class="btn-primary px-8 py-3 rounded-xl">
+                    Siguiente
+                </button>
+            </div>
+        </section>
+
+        <!-- FASE 1: Conoce a la candidatura -->
+        <section id="screen-phase1" class="screen p-8 sm:p-12 animate-fade-in-up">
+            <h2 class="text-2xl font-bold mb-6 text-center">Fase 1: Conoce a la candidatura</h2>
+            
+            <div class="bg-gray-50 p-6 rounded-2xl mb-8 text-gray-700 leading-relaxed text-sm sm:text-base border border-gray-100">
+                <p class="mb-4">
+                    La candidatura Martínez, de 42 años, es originaria de la Zona Metropolitana del Valle de México. Cuenta con una licenciatura en Ciencias Políticas y una maestría en Administración Pública. Durante los últimos seis años ha ocupado una regiduría en su demarcación y anteriormente trabajó en una organización civil dedicada a temas de desarrollo social. Tiene dos hijos. Actualmente busca ganarse un lugar en el gobierno de su comunidad, para representar a su distrito.
+                </p>
+                <p id="dynamic-stance" class="italic font-medium text-gray-600">
+                    <!-- Postura dinámica inyectada vía JS -->
+                </p>
+            </div>
+
+            <div class="eval-container border-t border-gray-100 pt-6">
+                <label class="block text-center text-lg font-semibold text-gray-800 mb-2">
+                    ¿Qué tan confiable consideras a esta candidatura en este momento?
+                </label>
+                <p class="text-center text-sm text-gray-500 mb-6">Mueve el indicador para registrar tu respuesta (0 a 100).</p>
+                
+                <div class="relative px-2">
+                    <input type="range" id="t0-slider" min="0" max="100" value="50" oninput="updateSliderValue('t0')">
+                    <div class="flex justify-between text-xs text-gray-400 mt-2">
+                        <span>Nada confiable</span>
+                        <span>Totalmente confiable</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-6 h-8">
+                    <span id="t0-value-display" class="slider-value-hidden text-2xl font-bold text-[#a7c7e7]">50</span>
+                </div>
+            </div>
+
+            <div class="mt-8 text-right">
+                <button id="btn-phase1-next" disabled onclick="startPhase2()" class="btn-primary px-8 py-3 rounded-xl">
+                    Continuar al flujo de noticias
+                </button>
+            </div>
+        </section>
+
+        <!-- FASE 2: Flujo de Noticias (Video y Texto) -->
+        <section id="screen-phase2" class="screen p-8 sm:p-12 animate-fade-in-up">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-xl font-bold text-gray-800">Flujo de Información</h2>
+                <span id="news-counter" class="text-sm font-semibold bg-gray-100 text-gray-600 px-3 py-1 rounded-full">Noticia 1 de 10</span>
+            </div>
+            
+            <div id="news-content-container" class="bg-white border border-gray-200 shadow-sm rounded-2xl p-6 mb-8 min-h-[150px] flex flex-col justify-center">
+                <!-- Video Container -->
+                <div id="video-container" class="hidden mb-4 rounded-xl overflow-hidden shadow-sm bg-black">
+                    <!-- Las URLs de Github irán vinculadas a este elemento video -->
+                    <video id="news-video" controls class="w-full max-h-64 object-cover" onended="videoEnded()">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                </div>
+                <!-- Text Container -->
+                <p id="news-text" class="text-gray-700 text-base leading-relaxed text-center font-medium"></p>
+            </div>
+
+            <div class="eval-container">
+                <label class="block text-center text-lg font-semibold text-gray-800 mb-2">
+                    Tras esta información, ¿qué tan confiable consideras a la candidatura?
+                </label>
+                
+                <div class="relative px-2 mt-6">
+                    <input type="range" id="news-slider" min="0" max="100" value="50" oninput="updateSliderValue('news')">
+                    <div class="flex justify-between text-xs text-gray-400 mt-2">
+                        <span>Nada confiable</span>
+                        <span>Totalmente confiable</span>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-6 h-8">
+                    <span id="news-value-display" class="slider-value-hidden text-2xl font-bold text-[#a7c7e7]">50</span>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button id="btn-news-next" disabled onclick="nextNewsItem()" class="btn-primary px-8 py-3 rounded-xl">
+                    Siguiente Noticia
+                </button>
+            </div>
+        </section>
+
+        <!-- FASE FINAL: Verificación y Debriefing -->
+        <section id="screen-closure" class="screen p-8 sm:p-12 animate-fade-in-up">
+            <h2 class="text-2xl font-bold mb-6 text-center">Fase Final: Verificación</h2>
+            
+            <div id="verification-step" class="mb-8">
+                <p class="text-gray-700 mb-4 font-medium">De acuerdo a la biografía que leíste al inicio, ¿qué postura ideológica declaró tener la candidatura?</p>
+                <div class="space-y-3">
+                    <label class="block p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-blue-50 transition">
+                        <input type="radio" name="verification" value="progresista" class="mr-2" onchange="enableFinish()">
+                        Progresista (A favor de la interrupción legal del embarazo)
+                    </label>
+                    <label class="block p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-blue-50 transition">
+                        <input type="radio" name="verification" value="conservadora" class="mr-2" onchange="enableFinish()">
+                        Conservadora (A favor de mantener restricciones legales)
+                    </label>
+                </div>
+            </div>
+
+            <div id="debriefing-step" class="hidden bg-gray-50 p-6 rounded-2xl text-gray-700 text-sm">
+                <h3 class="font-bold text-lg mb-3 text-gray-800">Información Importante (Debriefing)</h3>
+                <p class="mb-3">Gracias por tu participación. Es importante aclarar que la candidatura "Martínez", así como todas las noticias, videos, audios e informes gubernamentales presentados en este estudio son <strong>completamente ficticios</strong>.</p>
+                <p>Fueron creados exclusivamente con fines de investigación psicológica para comprender cómo las personas integran información secuencial. Ninguno de los eventos descritos ocurrió en la realidad.</p>
+                <p class="mt-4 font-semibold text-center">¡Tus respuestas han sido guardadas exitosamente!</p>
+            </div>
+
+            <div class="mt-8 text-center">
+                <button id="btn-finish" disabled onclick="finishStudy()" class="btn-primary px-10 py-3 rounded-xl">
+                    Finalizar Estudio
+                </button>
+            </div>
+        </section>
+
+    </main>
+
+    
+</body>
+</html>
