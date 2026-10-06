@@ -1,106 +1,127 @@
 :root {
-            --bg-color: #f9f9fb;
-            --card-bg: #ffffff;
-            --primary-pastel: #a7c7e7; /* Azul pastel */
-            --secondary-pastel: #c3b1e1; /* Violeta pastel */
-            --text-main: #1d1d1f; /* Estilo iOS dark text */
-            --text-muted: #86868b;
-        }
+    --bg-color: #f9f9fb;
+    --card-bg: #ffffff;
+    --primary-pastel: #a7c7e7; /* Azul pastel */
+    --secondary-pastel: #c3b1e1; /* Violeta pastel */
+    --text-main: #1d1d1f;
+    --text-muted: #86868b;
+}
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-        }
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
-        .animate-fade-in-up {
-            animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-        }
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
 
-        .screen {
-            display: none;
-        }
+.screen { display: none; }
+.screen.active { display: block; }
 
-        .screen.active {
-            display: block;
-        }
+.btn-primary {
+    background: linear-gradient(135deg, var(--primary-pastel), var(--secondary-pastel));
+    color: white;
+    font-weight: 600;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
+    border: none;
+}
 
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary-pastel), var(--secondary-pastel));
-            color: white;
-            font-weight: 600;
-            transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
-            border: none;
-        }
+.btn-primary:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(167, 199, 231, 0.5);
+}
 
-        .btn-primary:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(167, 199, 231, 0.5);
-        }
-        
-        .btn-primary:disabled {
-            background: #e0e0e0;
-            color: #a0a0a0;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
+.btn-primary:disabled {
+    background: #e0e0e0;
+    color: #a0a0a0;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
 
-        input[type=range] {
-            -webkit-appearance: none;
-            width: 100%;
-            background: transparent;
-        }
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+}
 
-        input[type=range]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            background: #ffffff;
-            cursor: pointer;
-            margin-top: -10px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            border: 2px solid var(--primary-pastel);
-        }
+input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background: #ffffff;
+    cursor: pointer;
+    margin-top: -10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    border: 2px solid var(--primary-pastel);
+}
 
-        input[type=range]::-webkit-slider-runnable-track {
-            width: 100%;
-            height: 6px;
-            cursor: pointer;
-            background: #e5e5ea;
-            border-radius: 3px;
-        }
-        
-        .input-ios {
-            background-color: #f2f2f7;
-            border: 1px solid transparent;
-            border-radius: 10px;
-            padding: 12px 16px;
-            font-size: 16px;
-            transition: all 0.2s;
-            width: 100%;
-            outline: none;
-        }
-        
-        .input-ios:focus {
-            background-color: #ffffff;
-            border-color: var(--primary-pastel);
-            box-shadow: 0 0 0 3px rgba(167, 199, 231, 0.3);
-        }
+input[type=range]::-webkit-slider-runnable-track {
+    width: 100%;
+    height: 6px;
+    cursor: pointer;
+    background: #e5e5ea;
+    border-radius: 3px;
+}
+
+.input-ios {
+    background-color: #f2f2f7;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 16px;
+    transition: all 0.2s;
+    width: 100%;
+    outline: none;
+}
+
+.input-ios:focus {
+    background-color: #ffffff;
+    border-color: var(--primary-pastel);
+    box-shadow: 0 0 0 3px rgba(167, 199, 231, 0.3);
+}
+
+.slider-value-hidden { opacity: 0; transition: opacity 0.3s; }
+.slider-value-visible { opacity: 1; }
+
+/* Efecto Hover/Touch para el deslizador invisible */
+.ideology-wrapper .slider-container {
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+.ideology-wrapper:hover .slider-container, 
+.ideology-wrapper:focus-within .slider-container,
+.ideology-wrapper:active .slider-container {
+    opacity: 1;
+    pointer-events: auto;
+}
+.ideology-wrapper .placeholder-text {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-pastel);
+    font-weight: 600;
+    transition: opacity 0.3s;
+}
+.ideology-wrapper:hover .placeholder-text, 
+.ideology-wrapper:focus-within .placeholder-text,
+.ideology-wrapper:active .placeholder-text {
+    opacity: 0;
+    pointer-events: none;
+}
 
         .slider-value-hidden {
             opacity: 0;
