@@ -12,15 +12,13 @@
     <main class="w-full max-w-2xl bg-white rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] overflow-hidden relative min-h-[500px]">
         
         <!-- PANTALLA 1: Portada -->
-        <section id="screen-cover" class="screen active p-8 sm:p-12 h-full flex flex-col justify-center items-center text-center animate-fade-in-up">
+        <section id="screen-cover" class="screen active flex-container p-8 sm:p-12 h-full flex-col justify-center items-center text-center animate-fade-in-up">
             <div class="mb-8 w-full">
-                <!-- Logos simétricos usando Flexbox -->
-                <div class="flex justify-center items-center gap-8 mb-6">
-                    <img src="logo-unam.png" alt="Logo UNAM" class="h-20 sm:h-24 object-contain">
-                    <img src="logo-facpsih.png" alt="Logo Facultad de Psicología" class="h-20 sm:h-24 object-contain">
+                <!-- Logos simétricos, sin texto inferior -->
+                <div class="flex justify-center items-center gap-8">
+                    <img src="logo-unam.png" alt="" class="h-20 sm:h-24 object-contain">
+                    <img src="logo-facpsih.png" alt="" class="h-20 sm:h-24 object-contain">
                 </div>
-                <h2 class="text-sm font-semibold tracking-widest text-gray-400 uppercase mb-2">Universidad Nacional Autónoma de México</h2>
-                <h3 class="text-xs font-medium tracking-wider text-gray-400 uppercase">Facultad de Psicología</h3>
             </div>
             
             <div class="my-6">
@@ -87,7 +85,6 @@
                     <p class="text-xs text-gray-500 mb-3">Indica tu postura, donde 1 es "Totalmente en contra" y 10 es "Totalmente a favor".</p>
                     
                     <div class="flex justify-between bg-gray-50 p-3 rounded-xl border border-gray-200 overflow-x-auto">
-                        <!-- Generando escala Likert del 1 al 10 -->
                         <script>
                             for(let i=1; i<=10; i++) {
                                 document.write(`
@@ -114,13 +111,12 @@
         </section>
 
         <!-- PANTALLA 3: Transición -->
-        <section id="screen-transition" class="screen p-8 sm:p-12 text-center flex flex-col justify-center h-full animate-fade-in-up">
+        <section id="screen-transition" class="screen flex-container p-8 sm:p-12 text-center flex-col justify-center h-full animate-fade-in-up">
             <div class="my-auto">
                 <div class="w-16 h-16 bg-blue-50 text-blue-500 rounded-full flex items-center justify-center mx-auto mb-6">
                     <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-4">Registro Exitoso</h2>
-                <p class="text-gray-600 text-lg">A continuación se presentará el instrumento de la investigación.</p>
+                <p class="text-gray-800 text-xl font-medium">A continuación se presentará el instrumento de la investigación.</p>
             </div>
             
             <button onclick="goToInstructions()" class="btn-primary w-full px-10 py-4 rounded-2xl text-lg mt-8">
@@ -233,7 +229,7 @@
         </section>
 
         <!-- PANTALLA FINAL: Cierre y Debriefing -->
-        <section id="screen-closure" class="screen p-8 sm:p-12 flex flex-col justify-center h-full animate-fade-in-up">
+        <section id="screen-closure" class="screen flex-container p-8 sm:p-12 flex-col justify-center h-full animate-fade-in-up">
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-800">Fase Final: Verificación</h2>
             
             <div id="verification-step" class="mb-8">
@@ -269,9 +265,5 @@
 
     </main>
 
-</body>
-</html>
-
-    
 </body>
 </html>
