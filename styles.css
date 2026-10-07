@@ -4,7 +4,7 @@
     --primary-pastel: #a7c7e7; /* Azul pastel */
     --secondary-pastel: #c3b1e1; /* Violeta pastel */
     --text-main: #1d1d1f;
-    --text-muted: #86868b;
+    --text-muted: #6b7280; /* Gris más oscuro para mejor legibilidad */
 }
 
 body {
@@ -72,12 +72,12 @@ input[type=range]::-webkit-slider-runnable-track {
     width: 100%;
     height: 6px;
     cursor: pointer;
-    background: #e5e5ea;
+    background: #d1d5db;
     border-radius: 3px;
 }
 
 .input-ios {
-    background-color: #f2f2f7;
+    background-color: #f3f4f6;
     border: 1px solid transparent;
     border-radius: 10px;
     padding: 12px 16px;
@@ -85,6 +85,7 @@ input[type=range]::-webkit-slider-runnable-track {
     transition: all 0.2s;
     width: 100%;
     outline: none;
+    color: #374151; /* Gris oscuro para el texto ingresado */
 }
 
 .input-ios:focus {
@@ -96,19 +97,19 @@ input[type=range]::-webkit-slider-runnable-track {
 .slider-value-hidden { opacity: 0; transition: opacity 0.3s; }
 .slider-value-visible { opacity: 1; }
 
-/* Efecto Hover/Touch para el deslizador invisible */
-.ideology-wrapper .slider-container {
+/* Efecto Hover/Touch para TODOS los contenedores invisibles (Ideología y Aborto) */
+.hidden-wrapper .reveal-content {
     opacity: 0;
     transition: opacity 0.3s ease;
     pointer-events: none;
 }
-.ideology-wrapper:hover .slider-container, 
-.ideology-wrapper:focus-within .slider-container,
-.ideology-wrapper:active .slider-container {
+.hidden-wrapper:hover .reveal-content, 
+.hidden-wrapper:focus-within .reveal-content,
+.hidden-wrapper:active .reveal-content {
     opacity: 1;
     pointer-events: auto;
 }
-.ideology-wrapper .placeholder-text {
+.hidden-wrapper .placeholder-text {
     position: absolute;
     inset: 0;
     display: flex;
@@ -118,9 +119,17 @@ input[type=range]::-webkit-slider-runnable-track {
     font-weight: 600;
     transition: opacity 0.3s;
 }
-.ideology-wrapper:hover .placeholder-text, 
-.ideology-wrapper:focus-within .placeholder-text,
-.ideology-wrapper:active .placeholder-text {
+.hidden-wrapper:hover .placeholder-text, 
+.hidden-wrapper:focus-within .placeholder-text,
+.hidden-wrapper:active .placeholder-text {
     opacity: 0;
     pointer-events: none;
+}
+
+/* Highlight style para palabras clave en las noticias */
+.highlight-word {
+    font-weight: 700;
+    transition: all 0.3s ease;
+    padding: 0 2px;
+    border-radius: 4px;
 }
