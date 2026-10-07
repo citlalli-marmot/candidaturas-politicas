@@ -39,7 +39,7 @@ const state = {
 
 const assignedStance = assignedGroup.stance.text;
 
-// 3. ESTRUCTURACIÓN DE LOS CICLOS 
+// 3. ESTRUCTURACIÓN DE LOS CICLOS (Basado en el Anteproyecto)
 function generateNewsFlow() {
     const N1 = { id: 'N1', type: 'text', content: "Un gremio profesional respalda las propuestas de la candidatura y destaca su compromiso con la transparencia institucional." };
     const N10 = { id: 'N10', type: 'text', content: "La autoridad electoral anuncia la fecha de la elección. Evaluación final." };
@@ -146,4 +146,136 @@ function startPhase2() {
 function highlightContent(text) {
     return text
         .replace("respalda", "<span class='highlight-word text-blue-600 bg-blue-50'>respalda</span>")
-        .replace("irregular", "<span class='highlight-word text-red-600 bg-red-50'>irregular
+        .replace("irregular", "<span class='highlight-word text-red-600 bg-red-50'>irregular</span>")
+        .replace("aclaran", "<span class='highlight-word text-green-600 bg-green-50'>aclaran</span>")
+        .replace("negligencia", "<span class='highlight-word text-orange-600 bg-orange-50'>negligencia</span>")
+        .replace("positiva", "<span class='highlight-word text-blue-600 bg-blue-50'>positiva</span>")
+        .replace("falso", "<span class='highlight-word text-green-600 bg-green-50 px-1'>falso</span>")
+        .replace("auténtico", "<span class='highlight-word text-red-600 bg-red-50 px-1'>auténtico</span>")
+        .replace("deliberada", "<span class='highlight-word text-red-700'>deliberada</span>")
+        .replace("transparentes", "<span class='highlight-word text-blue-600'>transparentes</span>")
+        .replace("errores", "<span class='highlight-word text-orange-600'>errores</span>")
+        .replace("ratifica", "<span class='highlight-word text-red-600'>ratifica</span>")
+        .replace("reafirma", "<span class='highlight-word text-blue-600'>reafirma</span>");
+}
+
+function loadNewsItem() {
+    const item = state.newsFlow[state.currentNewsIndex];
+    document.getElementById('news-counter').textContent = `Noticia ${state.currentNewsIndex + 1} de 10`;
+    
+    const textContainer = document.getElementById('news-text');
+    const videoContainer = document.getElementById('video-container');
+    const videoEl = document.getElementById('news-video');
+    
+    textContainer.classList.remove('hidden');
+    videoContainer.classList.add('hidden');
+    videoEl.pause();
+    
+    if (state.modality === 'video' && item.type === 'video' && item.videoUrl) {
+        textContainer.classList.add('hidden');
+        videoContainer.classList.remove('hidden');
+        videoEl.src = item.videoUrl;
+        videoEl.load();
+        
+        let playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Autoplay requiere interacción. El usuario deberá dar play manualmente.", error);
+            });
+        }
+    } else {
+        textContainer.innerHTML = highlightContent(item.content);
+    }
+    resetSlider('news');
+}
+
+function nextNewsItem() {
+    const currentItem = state.newsFlow[state.currentNewsIndex];
+    state.evaluations.push({
+        step: `T${state.currentNewsIndex + 1}_${currentItem.id}`,
+        value: document.getElementById('news-slider').value
+    });
+
+    state.currentNewsIndex++;
+
+    if (state.currentNewsIndex < state.newsFlow.length) {
+        const container = document.getElementById('news-content-container');
+        container.style.opacity = 0;
+        setTimeout(() => {
+            loadNewsItem();
+            container.style.transition = 'opacity 0.4s';
+            container.style.opacity = 1;
+        }, 300);
+    } else {
+        switchScreen('screen-closure');
+    }
+}
+
+function enableFinish() {
+    document.getElementById('btn-finish').disabled = false;
+}
+
+// 5. ENVÍO DE DATOS A GOOGLE SHEETS
+function finishStudy() {
+    const verification = document.querySelector('input[name="verification"]:checked');
+    const debriefingStep = document.getElementById('debriefing-step');
+    const verificationStep = document.getElementById('verification-step');
+    const btn = document.getElementById('btn-finish');
+
+    if (debriefingStep.classList.contains('hidden')) {
+        verificationStep.classList.add('hidden');
+        debriefingStep.classList.remove('hidden');
+        btn.textContent = "Cerrar y Enviar Datos";
+        btn.classList.replace('from-[#f8c8d8]', 'from-green-400');
+        btn.classList.replace('to-[#eab4c6]', 'to-emerald-500');
+        state.verificationAnswer = verification ? verification.value : null;
+    } else {
+        btn.textContent = "Enviando...";
+        btn.disabled = true;
+
+        const payload = {
+            edad: state.demographics.age,
+            carrera: state.demographics.career,
+            ideologia: state.demographics.ideology,
+            aborto: state.demographics.abortionStance,
+            posturaCandidatura: state.candidateStanceId,
+            modalidad: state.modality,
+            condicion: state.experimentalCondition,
+            secuencia: state.sequenceType,
+            verificacion: state.verificationAnswer,
+            ...state.evaluations.reduce((acc, curr, index) => {
+                acc[`Ev_${index}`] = curr.value;
+                return acc;
+            }, {})
+        };
+
+        console.log("Enviando a Google Sheets:", payload);
+
+        fetch(sheetURL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        }).then(() => {
+            const modal = document.createElement('div');
+            modal.innerHTML = `
+                <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm text-center border-t-8 border-[#f8c8d8]">
+                        <h3 class="text-xl font-bold mb-4 text-gray-800">¡Muchas gracias!</h3>
+                        <p class="text-gray-700 mb-6">Tus datos han sido enviados con éxito. Puedes cerrar esta pestaña.</p>
+                    </div>
+                </div>`;
+            document.body.appendChild(modal);
+        }).catch(err => {
+            console.error("Error al enviar datos:", err);
+            alert("Hubo un problema de conexión al enviar tus datos, por favor revisa tu internet.");
+            btn.textContent = "Reintentar";
+            btn.disabled = false;
+        });
+    }
+}
+
+// INICIALIZACIÓN: Asegurar que el HTML esté completamente cargado antes de inicializar
+document.addEventListener("DOMContentLoaded", function() {
+    switchScreen('screen-cover');
+});
