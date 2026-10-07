@@ -281,7 +281,7 @@ function finishStudy() {
 
 // Inicializar
 switchScreen('screen-cover');
-}
+
 
 // Inicializar mostrando la primera pantalla
 switchScreen('screen-cover');
