@@ -188,8 +188,5 @@ function finishStudy() {
     }
 }
 
+// Inicializar mostrando la primera pantalla
 switchScreen('screen-cover');
-        }
-
-        // Forzar la primera pantalla visible
-        switchScreen('screen-cover');
