@@ -1,10 +1,10 @@
 :root {
-    --bg-color: #f9f9fb;
+    --bg-color: #fdfafb; /* Fondo con un levísimo toque rosado */
     --card-bg: #ffffff;
-    --primary-pastel: #a7c7e7; /* Azul pastel */
-    --secondary-pastel: #c3b1e1; /* Violeta pastel */
-    --text-main: #1d1d1f;
-    --text-muted: #6b7280; /* Gris más oscuro para mejor legibilidad */
+    --primary-pastel: #f8c8d8; /* Rosa pastel principal */
+    --secondary-pastel: #eab4c6; /* Rosa pastel secundario / malva */
+    --text-main: #2b1f23;
+    --text-muted: #756269;
 }
 
 body {
@@ -31,20 +31,20 @@ body {
 
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-pastel), var(--secondary-pastel));
-    color: white;
-    font-weight: 600;
+    color: #4a2833; /* Texto oscuro para contrastar con el rosa */
+    font-weight: 700;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
     border: none;
 }
 
 .btn-primary:hover:not(:disabled) {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(167, 199, 231, 0.5);
+    box-shadow: 0 4px 12px rgba(248, 200, 216, 0.5);
 }
 
 .btn-primary:disabled {
-    background: #e0e0e0;
-    color: #a0a0a0;
+    background: #e5e7eb;
+    color: #9ca3af;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -65,7 +65,7 @@ input[type=range]::-webkit-slider-thumb {
     cursor: pointer;
     margin-top: -10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    border: 2px solid var(--primary-pastel);
+    border: 2px solid var(--secondary-pastel);
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -85,13 +85,13 @@ input[type=range]::-webkit-slider-runnable-track {
     transition: all 0.2s;
     width: 100%;
     outline: none;
-    color: #374151; /* Gris oscuro para el texto ingresado */
+    color: #374151;
 }
 
 .input-ios:focus {
     background-color: #ffffff;
     border-color: var(--primary-pastel);
-    box-shadow: 0 0 0 3px rgba(167, 199, 231, 0.3);
+    box-shadow: 0 0 0 3px rgba(248, 200, 216, 0.3);
 }
 
 .slider-value-hidden { opacity: 0; transition: opacity 0.3s; }
@@ -115,7 +115,7 @@ input[type=range]::-webkit-slider-runnable-track {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--primary-pastel);
+    color: #b57a8f;
     font-weight: 600;
     transition: opacity 0.3s;
 }
