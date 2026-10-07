@@ -41,28 +41,39 @@ const state = {
 };
 
 const assignedStance = assignedGroup.stance.text;
-
 // 3. ESTRUCTURACIÓN DE LOS CICLOS (Basado en el Anteproyecto)
 function generateNewsFlow() {
+    // Si necesitas que N1 también sea video, puedes cambiar type a 'video' y agregar videoUrl
     const N1 = { id: 'N1', type: 'text', content: "Un gremio profesional respalda las propuestas de la candidatura y destaca su compromiso con la transparencia institucional." };
     const N10 = { id: 'N10', type: 'text', content: "La autoridad electoral anuncia la fecha de la elección. Evaluación final." };
 
     const cycleA = [
-        { id: 'A-', type: 'video', content: "Rumores en redes sociales señalan un depósito irregular en la cuenta de la candidatura; el hecho se describe como un error administrativo accidental.", videoUrl: "URL_DE_TU_VIDEO_EN_GITHUB_1.mp4" },
+        // Sustituido por video1.mp4 (Asegúrate de poner el enlace "raw" de tu GitHub)
+        { id: 'A-', type: 'video', content: "Rumores en redes sociales señalan un depósito irregular en la cuenta de la candidatura...", videoUrl: "video1.mp4" },
         { id: 'A+', type: 'text', content: "El equipo de campaña presenta documentos de auditoría interna que aclaran que el error bancario se corrigió sin afectación patrimonial." }
     ];
     const cycleB = [
-        { id: 'B-', type: 'video', content: "Un reportaje periodístico revela que un contrato público fue asignado a una empresa vinculada a familiares de la candidatura y lo atribuye a negligencia y falta de supervisión.", videoUrl: "URL_DE_TU_VIDEO_EN_GITHUB_2.mp4" },
+        // Sustituido por video2.mp4 (Asegúrate de poner el enlace "raw" de tu GitHub)
+        { id: 'B-', type: 'video', content: "Un reportaje periodístico revela que un contrato público fue asignado a una empresa vinculada a familiares de la candidatura...", videoUrl: "video2.mp4" },
         { id: 'B+', type: 'text', content: "Organizaciones civiles publican un comunicado en el que reconocen el impacto positivo de las iniciativas legislativas de la candidatura." }
     ];
     const cycleC = [
-        { id: 'C-', type: 'video', content: `Circula en redes sociales un audio que se sospecha generado con inteligencia artificial, en el que se acusa a la candidatura de ordenar de manera deliberada el desvío de fondos destinados a medicinas de un hospital público. Peritos concluyen que el audio es ${state.experimentalCondition === 'desmentida' ? 'falso' : 'auténtico'}.`, videoUrl: "URL_DE_TU_VIDEO_EN_GITHUB_3.mp4" },
+        { id: 'C-', type: 'video', content: `Circula en redes sociales un audio que se sospecha generado con inteligencia artificial... Peritos concluyen que el audio es ${state.experimentalCondition === 'desmentida' ? 'falso' : 'auténtico'}.`, videoUrl: "URL_DE_TU_VIDEO_3.mp4" },
         { id: 'C+', type: 'text', content: "La candidatura presenta su plan de infraestructura y salud pública, con financiamiento y presupuesto transparentes." }
     ];
     const cycleD = [
-        { id: 'D-', type: 'video', content: `Una institución gubernamental publica un informe oficial con pruebas periciales que señala que la candidatura ordenó de manera deliberada la retención de fondos destinados a la compra de equipo médico de un hospital público. ${state.experimentalCondition === 'desmentida' ? 'La institución retira el informe al detectar errores en las pruebas.' : 'Una instancia independiente ratifica sus conclusiones.'}`, videoUrl: "URL_DE_TU_VIDEO_EN_GITHUB_4.mp4" },
+        { id: 'D-', type: 'video', content: `Una institución gubernamental publica un informe oficial con pruebas periciales... ${state.experimentalCondition === 'desmentida' ? 'La institución retira el informe al detectar errores en las pruebas.' : 'Una instancia independiente ratifica sus conclusiones.'}`, videoUrl: "URL_DE_TU_VIDEO_4.mp4" },
         { id: 'D+', type: 'text', content: "La candidatura ofrece una conferencia de prensa en la que reafirma su compromiso con el electorado." }
     ];
+
+    let flow = [];
+    if (state.sequenceType === 'S1') flow = [N1, ...cycleA, ...cycleB, ...cycleC, ...cycleD, N10];
+    if (state.sequenceType === 'S2') flow = [N1, ...cycleB, ...cycleD, ...cycleA, ...cycleC, N10];
+    if (state.sequenceType === 'S3') flow = [N1, ...cycleD, ...cycleC, ...cycleB, ...cycleA, N10];
+    if (state.sequenceType === 'S4') flow = [N1, ...cycleC, ...cycleA, ...cycleD, ...cycleB, N10];
+
+    state.newsFlow = flow;
+}
 
     // Aplicación del Cuadrado Latino Balanceado
     let flow = [];
@@ -175,6 +186,24 @@ function loadNewsItem() {
     videoContainer.classList.add('hidden');
     videoEl.pause();
     
+    // CORRECCIÓN: Verifica de forma más segura si hay URL de video y la aplica
+    if (state.modality === 'video' && item.type === 'video' && item.videoUrl) {
+        textContainer.classList.add('hidden');
+        videoContainer.classList.remove('hidden');
+        videoEl.src = item.videoUrl;
+        videoEl.load();
+        
+        let playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+            playPromise.catch(error => {
+                console.log("Autoplay requiere interacción. El usuario deberá dar play manualmente.", error);
+            });
+        }
+    } else {
+        textContainer.innerHTML = highlightContent(item.content);
+    }
+    resetSlider('news');
+}
     // Evalúa si el participante está en el grupo de Video Y la noticia actual es de formato video
     if (state.modality === 'video' && item.type === 'video' && item.videoUrl && !item.videoUrl.includes("URL_DE_TU_VIDEO")) {
         textContainer.classList.add('hidden');
