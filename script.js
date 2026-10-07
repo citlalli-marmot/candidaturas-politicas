@@ -35,18 +35,22 @@ function switchScreen(screenId) {
     document.getElementById(screenId).classList.add('active');
 }
 
-// Validación de Fase 0 (Edad entera, Aborto en Likert, Consentimiento)
+function acceptConsent() {
+    switchScreen('screen-phase0');
+}
+
+// Validación de Fase 0 (Edad entera, Carrera, Aborto en Likert)
 function validatePhase0() {
     const ageInput = document.getElementById('age-input');
     // Forzar solo números (elimina letras y caracteres especiales)
     ageInput.value = ageInput.value.replace(/[^0-9]/g, '');
     
     const age = parseInt(ageInput.value, 10);
+    const career = document.getElementById('career-input').value.trim();
     const stance = document.querySelector('input[name="abortion"]:checked');
-    const consent = document.getElementById('consent-check').checked;
     const btn = document.getElementById('btn-phase0-next');
 
-    if (age >= 18 && age <= 25 && stance && consent) {
+    if (age >= 18 && age <= 25 && career !== "" && stance) {
         btn.disabled = false;
     } else {
         btn.disabled = true;
@@ -79,6 +83,7 @@ function resetSlider(phase) {
 function goToTransition() {
     state.demographics = {
         age: document.getElementById('age-input').value,
+        career: document.getElementById('career-input').value,
         ideology: document.getElementById('ideology-slider').value,
         abortionStance: document.querySelector('input[name="abortion"]:checked').value
     };
@@ -106,6 +111,23 @@ function startPhase2() {
     switchScreen('screen-phase2');
 }
 
+// Función para resaltar palabras importantes
+function highlightContent(text) {
+    return text
+        .replace("respalda", "<span class='highlight-word text-blue-600 bg-blue-50'>respalda</span>")
+        .replace("irregular", "<span class='highlight-word text-red-600 bg-red-50'>irregular</span>")
+        .replace("aclaran", "<span class='highlight-word text-green-600 bg-green-50'>aclaran</span>")
+        .replace("negligencia", "<span class='highlight-word text-orange-600 bg-orange-50'>negligencia</span>")
+        .replace("positiva", "<span class='highlight-word text-blue-600 bg-blue-50'>positiva</span>")
+        .replace("falso", "<span class='highlight-word text-green-600 bg-green-50 px-1'>falso</span>")
+        .replace("auténtico", "<span class='highlight-word text-red-600 bg-red-50 px-1'>auténtico</span>")
+        .replace("deliberada", "<span class='highlight-word text-red-700'>deliberada</span>")
+        .replace("transparentes", "<span class='highlight-word text-blue-600'>transparentes</span>")
+        .replace("errores", "<span class='highlight-word text-orange-600'>errores</span>")
+        .replace("ratifica", "<span class='highlight-word text-red-600'>ratifica</span>")
+        .replace("reafirma", "<span class='highlight-word text-blue-600'>reafirma</span>");
+}
+
 function loadNewsItem() {
     const item = newsFlow[state.currentNewsIndex];
     document.getElementById('news-counter').textContent = `Noticia ${state.currentNewsIndex + 1} de 10`;
@@ -123,10 +145,9 @@ function loadNewsItem() {
         videoContainer.classList.remove('hidden');
         videoEl.src = item.videoUrl;
         videoEl.load();
-    } else if (item.type === 'video') {
-         textContainer.innerHTML = `<span class="text-blue-500 font-bold">[Formato Video Animado]</span><br><br>${item.content}`;
     } else {
-        textContainer.innerHTML = `<span class="text-green-600 font-bold">[Formato Texto Escrito]</span><br><br>${item.content}`;
+        // Formato texto puro, usando la función para destacar palabras
+        textContainer.innerHTML = highlightContent(item.content);
     }
     resetSlider('news');
 }
@@ -180,7 +201,7 @@ function finishStudy() {
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm text-center">
                         <h3 class="text-xl font-bold mb-4 text-gray-800">¡Muchas gracias!</h3>
-                        <p class="text-gray-600 mb-6">Tus datos han sido enviados con éxito. Puedes cerrar esta pestaña.</p>
+                        <p class="text-gray-700 mb-6">Tus datos han sido enviados con éxito. Puedes cerrar esta pestaña.</p>
                     </div>
                 </div>`;
             document.body.appendChild(modal);
