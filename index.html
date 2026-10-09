@@ -71,7 +71,7 @@
             </div>
         </section>
 
-        <!-- PANTALLA 3: Datos Sociodemográficos -->
+      <!-- PANTALLA 3: Datos Sociodemográficos -->
         <section id="screen-phase0" class="screen p-8 sm:p-12 animate-fade-in-up">
             <h2 class="text-2xl font-bold mb-8 text-center text-gray-900">Datos Sociodemográficos</h2>
             
@@ -100,12 +100,19 @@
                             <option value="">Selecciona...</option>
                             <option value="Facultad de Psicología">Facultad de Psicología</option>
                             <option value="FES Zaragoza">FES Zaragoza</option>
-                            <option value="FES Aragón">FES Aragón</option>
+                            <option value="FES Iztacala">FES Iztacala</option>
+                            <option value="Otra">Otra</option>
                         </select>
                     </div>
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">Carrera / Licenciatura</label>
-                        <input type="text" id="career-input" class="input-ios w-full" placeholder="Ej. Psicología" oninput="validatePhase0()">
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">Zona de residencia (ZMVM)</label>
+                        <select id="zona-input" class="input-ios w-full" onchange="validatePhase0()">
+                            <option value="">Selecciona...</option>
+                            <option value="Zona Central">Zona Central (B. Juárez, Cuauhtémoc, M. Hidalgo, etc.)</option>
+                            <option value="Periferia Interior">Periferia Interior (Iztapalapa, GAM, Azcapotzalco, etc.)</option>
+                            <option value="Periferia Exterior (Edomex)">Periferia Exterior (Edomex - Neza, Ecatepec, etc.)</option>
+                            <option value="Periferia Sur-Rural">Periferia Sur-Rural (Milpa Alta, Tláhuac, M. Contreras)</option>
+                        </select>
                     </div>
                 </div>
 
@@ -148,7 +155,7 @@
                 </button>
             </div>
         </section>
-
+        
         <!-- PANTALLA 4: Transición -->
         <section id="screen-transition" class="screen flex-container p-8 sm:p-12 text-center flex-col justify-center h-full animate-fade-in-up">
             <div class="my-auto">
