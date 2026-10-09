@@ -143,7 +143,7 @@
             </div>
 
             <div class="mt-10 text-right">
-                <button id="btn-phase0-next" disabled onclick="assignCondition()" class="btn-primary px-8 py-3 rounded-xl flex items-center justify-center ml-auto">
+                <button id="btn-phase0-next" disabled onclick="assignCondition()" class="btn-primary px-8 py-3 rounded-xl flex items-center justify-center ml-auto min-w-[200px]">
                     <span id="assign-btn-text">Siguiente</span>
                 </button>
             </div>
@@ -168,9 +168,13 @@
                 <ol class="list-decimal pl-5 space-y-3 font-medium text-gray-800">
                     <li>Primero, leerás una breve <strong>biografía</strong> de la candidatura y registrarás tu nivel de confianza inicial.</li>
                     <li>Después, se te presentará una secuencia de <strong>10 noticias sucesivas</strong>.</li>
-                    <li>Tras leer o ver cada una de las noticias, deberás ajustar el <strong>deslizador en pantalla (de 0 a 100)</strong> para indicar qué tan confiable te parece la candidatura <em>tomando en cuenta lo que acabas de enterarte</em>.</li>
+                    <li>Tras revisar cada noticia, deberás ajustar el <strong>deslizador en pantalla (de 0 a 100)</strong> para indicar qué tan confiable te parece la candidatura <em>tomando en cuenta la información que acabas de recibir</em>.</li>
                 </ol>
-                <p class="text-sm text-gray-600 mt-4 italic font-medium">No hay respuestas correctas ni incorrectas. Por favor, evalúa de la forma más honesta posible.</p>
+                
+                <div class="mt-4 p-4 bg-pink-50 border-l-4 border-pink-400 rounded-r-lg text-sm text-gray-800 shadow-sm text-justify">
+                    <strong>💡 IMPORTANTE SOBRE EL DESLIZADOR:</strong><br>
+                    Para evitar influir en tu respuesta, el círculo del deslizador <em>estará oculto inicialmente</em>. <strong>Debes hacer clic o tocar en cualquier parte de la línea gris</strong> para que aparezca, y posteriormente podrás arrastrarlo a la posición que desees. No podrás avanzar hasta que registres tu respuesta.
+                </div>
             </div>
             <div class="mt-8 text-right">
                 <button onclick="startPhase1()" class="btn-primary px-8 py-3 rounded-xl">Entendido, comenzar</button>
@@ -190,8 +194,8 @@
             </div>
 
             <div class="eval-container border-t border-gray-200 pt-6">
-                <label class="block text-center text-lg font-semibold text-gray-900 mb-2">¿Qué tan confiable consideras a esta candidatura en este momento?</label>
-                <p class="text-center text-sm text-gray-600 mb-6">Mueve el indicador para registrar tu respuesta.</p>
+                <label class="block text-center text-lg font-semibold text-gray-900 mb-1">¿Qué tan confiable consideras a esta candidatura en este momento?</label>
+                <p class="text-center text-sm text-pink-600 mb-6 font-medium">1. Toca la línea gris para activar el indicador &nbsp;•&nbsp; 2. Arrástralo a tu respuesta</p>
                 
                 <div class="relative px-2">
                     <input type="range" id="t0-slider" min="0" max="100" value="50" oninput="updateSliderValue('t0')" class="no-thumb">
@@ -218,7 +222,6 @@
             
             <div id="news-content-container" class="bg-gray-50 border border-gray-200 shadow-inner rounded-2xl p-6 sm:p-8 mb-8 min-h-[180px] flex flex-col justify-center">
                 <div id="video-container" class="mb-4 rounded-xl overflow-hidden shadow-sm bg-black">
-                    <!-- Atributo playsinline necesario para no maximizarse en iOS y reproducir automático -->
                     <video id="news-video" controls playsinline preload="auto" class="w-full max-h-64 object-cover">
                         Tu navegador no soporta el elemento de video.
                     </video>
@@ -227,9 +230,10 @@
             </div>
 
             <div class="eval-container border-t border-gray-200 pt-6">
-                <label class="block text-center text-lg font-semibold text-gray-900 mb-2">Tras esta información, ¿qué tan confiable consideras a la candidatura?</label>
+                <label class="block text-center text-lg font-semibold text-gray-900 mb-1">Tras esta información, ¿qué tan confiable consideras a la candidatura?</label>
+                <p class="text-center text-sm text-pink-600 mb-4 font-medium">1. Toca la línea gris para activar el indicador &nbsp;•&nbsp; 2. Arrástralo a tu respuesta</p>
                 
-                <div class="relative px-2 mt-6">
+                <div class="relative px-2 mt-4">
                     <input type="range" id="news-slider" min="0" max="100" value="50" oninput="updateSliderValue('news')" class="no-thumb">
                     <div class="flex justify-between text-xs text-gray-500 mt-2 font-medium">
                         <span>Nada confiable (0)</span><span>Totalmente confiable (100)</span>
@@ -250,7 +254,7 @@
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Verificación</h2>
             
             <div id="verification-step" class="mb-8">
-                <p class="text-gray-900 mb-6 font-medium bg-yellow-50 p-4 border border-yellow-200 rounded-xl shadow-sm text-center text-lg">¿Qué postura ideológica declaró tener la candidatura?</p>
+                <p class="text-gray-900 mb-6 font-medium bg-yellow-50 p-4 border border-yellow-200 rounded-xl shadow-sm text-center text-lg">¿Qué postura ideológica declaró tener la candidatura al principio?</p>
                 <div class="space-y-4">
                     <label class="flex p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-pink-50 transition shadow-sm bg-white">
                         <input type="radio" name="verification" value="progresista" class="mr-4 mt-1 w-5 h-5 accent-pink-500" onchange="enableFinish()">
@@ -277,10 +281,6 @@
             </div>
         </section>
 
-    </main>
-    <script src="script.js"></script>
-</body>
-</html>
     </main>
     <script src="script.js"></script>
 </body>
