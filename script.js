@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxRDCHmu1yNR56vb4oECy4iOvZXdNNy8zuo3G2-e8s6Mu8_fg3sm-_ab6Ie7X1Z6lMl/exec"; 
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxYAMcQo_p8q2THz4KraMf5YVSAQgNicvheLN__xrTmDVRWhYf9FftrCm7RhcH1RI7t/exec"; 
 
 const state = {
     id_participante: null,
