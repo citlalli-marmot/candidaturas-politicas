@@ -66,6 +66,7 @@ input[type=range]::-webkit-slider-thumb {
     margin-top: -10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     border: 2px solid var(--secondary-pastel);
+    transition: opacity 0.2s;
 }
 
 input[type=range]::-webkit-slider-runnable-track {
@@ -74,6 +75,14 @@ input[type=range]::-webkit-slider-runnable-track {
     cursor: pointer;
     background: #d1d5db;
     border-radius: 3px;
+}
+
+/* Ocultar el thumb inicial para no tener anclaje (Hasta el primer clic) */
+input[type=range].no-thumb::-webkit-slider-thumb {
+    opacity: 0;
+}
+input[type=range].no-thumb::-moz-range-thumb {
+    opacity: 0;
 }
 
 .input-ios {
