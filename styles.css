@@ -1,8 +1,8 @@
 :root {
-    --bg-color: #fdfafb; /* Fondo con un levísimo toque rosado */
+    --bg-color: #fdfafb;
     --card-bg: #ffffff;
-    --primary-pastel: #f8c8d8; /* Rosa pastel principal */
-    --secondary-pastel: #eab4c6; /* Rosa pastel secundario / malva */
+    --primary-pastel: #f8c8d8;
+    --secondary-pastel: #eab4c6;
     --text-main: #2b1f23;
     --text-muted: #756269;
 }
@@ -24,14 +24,14 @@ body {
     animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
-/* AQUÍ ESTÁ LA SOLUCIÓN AL BUG DE PANTALLAS ENCIMADAS */
+/* Solución a superposición de pantallas */
 .screen { display: none !important; }
 .screen.active { display: block !important; }
 .screen.active.flex-container { display: flex !important; }
 
 .btn-primary {
     background: linear-gradient(135deg, var(--primary-pastel), var(--secondary-pastel));
-    color: #4a2833; /* Texto oscuro para contrastar con el rosa */
+    color: #4a2833;
     font-weight: 700;
     transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s;
     border: none;
@@ -58,14 +58,14 @@ input[type=range] {
 
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
-    height: 24px;
-    width: 24px;
+    height: 26px;
+    width: 26px;
     border-radius: 50%;
     background: #ffffff;
     cursor: pointer;
     margin-top: -10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    border: 2px solid var(--secondary-pastel);
+    border: 3px solid var(--secondary-pastel);
     transition: opacity 0.2s;
 }
 
@@ -106,7 +106,6 @@ input[type=range].no-thumb::-moz-range-thumb {
 .slider-value-hidden { opacity: 0; transition: opacity 0.3s; }
 .slider-value-visible { opacity: 1; }
 
-/* Efecto Hover/Touch para TODOS los contenedores invisibles (Ideología y Aborto) */
 .hidden-wrapper .reveal-content {
     opacity: 0;
     transition: opacity 0.3s ease;
@@ -135,7 +134,6 @@ input[type=range].no-thumb::-moz-range-thumb {
     pointer-events: none;
 }
 
-/* Highlight style para palabras clave en las noticias */
 .highlight-word {
     font-weight: 700;
     transition: all 0.3s ease;
