@@ -76,15 +76,38 @@
             <h2 class="text-2xl font-bold mb-8 text-center text-gray-900">Datos Sociodemográficos</h2>
             
             <div class="space-y-8">
-                <div>
-                    <label class="block text-sm font-semibold text-gray-800 mb-2">Edad (años cumplidos)</label>
-                    <input type="text" id="age-input" class="input-ios" placeholder="Ingresa tu edad en números enteros" oninput="validatePhase0()">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">Edad (años)</label>
+                        <input type="number" id="age-input" class="input-ios w-full" placeholder="Ej. 20" oninput="validatePhase0()">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">Género autopercibido</label>
+                        <select id="gender-input" class="input-ios w-full" onchange="validatePhase0()">
+                            <option value="">Selecciona...</option>
+                            <option value="Femenino">Femenino</option>
+                            <option value="Masculino">Masculino</option>
+                            <option value="No binario">No binario</option>
+                            <option value="Otro">Otro</option>
+                        </select>
+                    </div>
                 </div>
 
-                 <div>
-                     <label class="block text-sm font-semibold text-gray-800 mb-2">Facultad de adscripción</label>
-                     <input type="text" id="career-input" class="input-ios" placeholder="Ej. Facultad de Psicología, FES Zaragoza, etc." oninput="validatePhase0()">
-                 </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">Facultad de adscripción</label>
+                        <select id="faculty-input" class="input-ios w-full" onchange="validatePhase0()">
+                            <option value="">Selecciona...</option>
+                            <option value="Facultad de Psicología">Facultad de Psicología</option>
+                            <option value="FES Zaragoza">FES Zaragoza</option>
+                            <option value="FES Aragón">FES Aragón</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">Carrera / Licenciatura</label>
+                        <input type="text" id="career-input" class="input-ios w-full" placeholder="Ej. Psicología" oninput="validatePhase0()">
+                    </div>
+                </div>
 
                 <div>
                     <label class="block text-sm font-semibold text-gray-800 mb-2">Autoubicación Ideológica</label>
@@ -120,7 +143,9 @@
             </div>
 
             <div class="mt-10 text-right">
-                <button id="btn-phase0-next" disabled onclick="goToTransition()" class="btn-primary px-8 py-3 rounded-xl">Siguiente</button>
+                <button id="btn-phase0-next" disabled onclick="assignCondition()" class="btn-primary px-8 py-3 rounded-xl flex items-center justify-center ml-auto">
+                    <span id="assign-btn-text">Siguiente</span>
+                </button>
             </div>
         </section>
 
@@ -169,13 +194,13 @@
                 <p class="text-center text-sm text-gray-600 mb-6">Mueve el indicador para registrar tu respuesta.</p>
                 
                 <div class="relative px-2">
-                    <input type="range" id="t0-slider" min="0" max="100" value="50" oninput="updateSliderValue('t0')">
+                    <input type="range" id="t0-slider" min="0" max="100" value="50" oninput="updateSliderValue('t0')" class="no-thumb">
                     <div class="flex justify-between text-xs text-gray-500 mt-2 font-medium">
                         <span>Nada confiable (0)</span><span>Totalmente confiable (100)</span>
                     </div>
                 </div>
                 <div class="text-center mt-6 h-8">
-                    <span id="t0-value-display" class="slider-value-hidden text-3xl font-bold text-[#f8c8d8]">50</span>
+                    <span id="t0-value-display" class="text-3xl font-bold text-[#f8c8d8]"></span>
                 </div>
             </div>
 
@@ -192,7 +217,7 @@
             </div>
             
             <div id="news-content-container" class="bg-gray-50 border border-gray-200 shadow-inner rounded-2xl p-6 sm:p-8 mb-8 min-h-[180px] flex flex-col justify-center">
-                <div id="video-container" class="hidden mb-4 rounded-xl overflow-hidden shadow-sm bg-black">
+                <div id="video-container" class="mb-4 rounded-xl overflow-hidden shadow-sm bg-black">
                     <!-- Atributo playsinline necesario para no maximizarse en iOS y reproducir automático -->
                     <video id="news-video" controls playsinline preload="auto" class="w-full max-h-64 object-cover">
                         Tu navegador no soporta el elemento de video.
@@ -205,13 +230,13 @@
                 <label class="block text-center text-lg font-semibold text-gray-900 mb-2">Tras esta información, ¿qué tan confiable consideras a la candidatura?</label>
                 
                 <div class="relative px-2 mt-6">
-                    <input type="range" id="news-slider" min="0" max="100" value="50" oninput="updateSliderValue('news')">
+                    <input type="range" id="news-slider" min="0" max="100" value="50" oninput="updateSliderValue('news')" class="no-thumb">
                     <div class="flex justify-between text-xs text-gray-500 mt-2 font-medium">
                         <span>Nada confiable (0)</span><span>Totalmente confiable (100)</span>
                     </div>
                 </div>
                 <div class="text-center mt-6 h-8">
-                    <span id="news-value-display" class="slider-value-hidden text-3xl font-bold text-[#f8c8d8]">50</span>
+                    <span id="news-value-display" class="text-3xl font-bold text-[#f8c8d8]"></span>
                 </div>
             </div>
 
@@ -252,6 +277,10 @@
             </div>
         </section>
 
+    </main>
+    <script src="script.js"></script>
+</body>
+</html>
     </main>
     <script src="script.js"></script>
 </body>
