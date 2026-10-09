@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyF3peCP_LZaNmf6Xx-svmPE4BY9cjgLZsNzuIhwBQpvH1mpoE8CoAC-S_2s4inJ4z9/exec"; 
+const BACKEND_URL = "TU_URL_DE_APPS_SCRIPT_AQUI"; 
 
 const state = {
     id_participante: null,
@@ -24,26 +24,28 @@ function validatePhase0() {
     const age = parseInt(document.getElementById('age-input').value, 10);
     const gender = document.getElementById('gender-input').value;
     const faculty = document.getElementById('faculty-input').value;
-    const career = document.getElementById('career-input').value.trim();
+    const zona = document.getElementById('zona-input').value;
     const abortion = document.querySelector('input[name="abortion"]:checked');
 
-    // Validación corregida: Mayor a 18 sin límite superior
     document.getElementById('btn-phase0-next').disabled = 
-        !(age >= 18 && gender && faculty && career && abortion);
+        !(age >= 18 && gender && faculty && zona && abortion);
+}
+
+function generateFallbackId() {
+    return 'P-LOCAL' + Math.floor(1000 + Math.random() * 9000);
 }
 
 async function assignCondition() {
     const btnText = document.getElementById('assign-btn-text');
     document.getElementById('btn-phase0-next').disabled = true;
     
-    // Mensaje genérico para no revelar el proceso técnico
     btnText.textContent = "Cargando instrumento...";
 
     state.demographics = {
         age: document.getElementById('age-input').value,
         gender: document.getElementById('gender-input').value,
         faculty: document.getElementById('faculty-input').value,
-        career: document.getElementById('career-input').value,
+        zona_residencia_zmvm: document.getElementById('zona-input').value,
         ideology: document.getElementById('ideology-slider').value,
         abortionStance: document.querySelector('input[name="abortion"]:checked').value
     };
@@ -59,18 +61,7 @@ async function assignCondition() {
         
         let data = await response.json();
         
-        // SISTEMA ANTI-BLOQUEO: Si el servidor falla o devuelve vacío, asigna una de emergencia.
-        if (!data || !data.postura_candidatura) {
-            console.warn("Fallo de sincronización. Usando asignación local.");
-            data = {
-                id_participante: 'emergencia-' + Date.now(),
-                id_condicion: 'local-1',
-                modalidad: Math.random() > 0.5 ? 'texto' : 'video',
-                postura_candidatura: Math.random() > 0.5 ? 'progresista' : 'conservadora',
-                estatus_acusacion: Math.random() > 0.5 ? 'desmentida' : 'confirmada',
-                secuencia_ciclos: ['S1','S2','S3','S4'][Math.floor(Math.random()*4)]
-            };
-        }
+        if (!data || !data.postura_candidatura) throw new Error("Datos incompletos");
 
         state.id_participante = data.id_participante;
         state.id_condicion = data.id_condicion;
@@ -79,22 +70,19 @@ async function assignCondition() {
         state.estatus_acusacion = String(data.estatus_acusacion).trim().toLowerCase();
         state.secuencia_ciclos = String(data.secuencia_ciclos).trim().toUpperCase();
 
-        applyModalityStrictness();
-        buildNewsFlow();
-        switchScreen('screen-transition');
     } catch (err) {
-        console.error("Error de red:", err);
-        // Fallback extremo por si no hay internet (CORS / Bloqueo)
-        state.id_participante = 'offline-' + Date.now();
-        state.modalidad = 'texto';
-        state.postura_candidatura = 'progresista';
-        state.estatus_acusacion = 'desmentida';
-        state.secuencia_ciclos = 'S1';
-        
-        applyModalityStrictness();
-        buildNewsFlow();
-        switchScreen('screen-transition');
+        console.warn("Fallo de red o servidor. Usando asignación local.");
+        state.id_participante = generateFallbackId();
+        state.id_condicion = 'FALLBACK-1';
+        state.modalidad = Math.random() > 0.5 ? 'texto' : 'video';
+        state.postura_candidatura = Math.random() > 0.5 ? 'progresista' : 'conservadora';
+        state.estatus_acusacion = Math.random() > 0.5 ? 'desmentida' : 'confirmada';
+        state.secuencia_ciclos = ['S1','S2','S3','S4'][Math.floor(Math.random()*4)];
     }
+
+    applyModalityStrictness();
+    buildNewsFlow();
+    switchScreen('screen-transition');
 }
 
 function applyModalityStrictness() {
@@ -102,10 +90,21 @@ function applyModalityStrictness() {
     const videoContainer = document.getElementById('video-container');
     
     if (state.modalidad === 'texto') {
-        if(videoContainer) videoContainer.parentNode.removeChild(videoContainer);
+        if(videoContainer) videoContainer.remove();
     } else {
-        if(textContainer) textContainer.parentNode.removeChild(textContainer);
+        if(textContainer) textContainer.remove();
     }
+}
+
+function obtenerRutaVideo(postura, codigoNoticia, estatus) {
+    const p = postura.toLowerCase();
+    const c = codigoNoticia.replace('-', '_minus').replace('+', '_plus');
+    const e = estatus.toLowerCase();
+    
+    if (codigoNoticia.includes('C-') || codigoNoticia.includes('D-')) {
+        return `videos/video_${p}_${c}_${e}.mp4`;
+    }
+    return `videos/video_${p}_${c}.mp4`;
 }
 
 function highlightContent(text) {
@@ -127,38 +126,41 @@ function highlightContent(text) {
 
 function buildNewsFlow() {
     const isDesmentida = state.estatus_acusacion === 'desmentida';
+    const p = state.postura_candidatura;
+    const est = state.estatus_acusacion;
 
-    const N1 = { id: 'N1', valencia: 'positiva', content: "Un gremio profesional respalda las propuestas de la candidatura y destaca su compromiso con la transparencia institucional.", videoUrl: "URL_VIDEO_1.mp4" };
-    const N10 = { id: 'N10', valencia: 'neutra', content: "La autoridad electoral anuncia la fecha de la elección. Evaluación final.", videoUrl: "URL_VIDEO_10.mp4" };
-
+    const N1 = { id: 'N1', valencia: 'positiva', content: "Un gremio profesional respalda las propuestas de la candidatura y destaca su compromiso con la transparencia institucional.", videoUrl: obtenerRutaVideo(p, 'N1', est) };
+    
     const cycleA = [
-        { id: 'A-', valencia: 'negativa', content: "Rumores en redes sociales señalan un depósito irregular en la cuenta de la candidatura; el hecho se describe como un error administrativo accidental.", videoUrl: "URL_VIDEO_A_MINUS.mp4" },
-        { id: 'A+', valencia: 'positiva', content: "El equipo de campaña presenta documentos de auditoría interna que aclaran que el error bancario se corrigió sin afectación patrimonial.", videoUrl: "URL_VIDEO_A_PLUS.mp4" }
+        { id: 'A-', valencia: 'negativa', content: "Rumores en redes sociales señalan un depósito irregular en la cuenta de la candidatura; el hecho se describe como un error administrativo accidental.", videoUrl: obtenerRutaVideo(p, 'A-', est) },
+        { id: 'A+', valencia: 'positiva', content: "El equipo de campaña presenta documentos de auditoría interna que aclaran que el error bancario se corrigió sin afectación patrimonial.", videoUrl: obtenerRutaVideo(p, 'A+', est) }
     ];
+    
     const cycleB = [
-        { id: 'B-', valencia: 'negativa', content: "Un reportaje periodístico revela que un contrato público fue asignado a una empresa vinculada a familiares de la candidatura y lo atribuye a negligencia y falta de supervisión.", videoUrl: "URL_VIDEO_B_MINUS.mp4" },
-        { id: 'B+', valencia: 'positiva', content: "Organizaciones civiles publican un comunicado en el que reconocen el impacto positivo de las iniciativas legislativas de la candidatura.", videoUrl: "URL_VIDEO_B_PLUS.mp4" }
+        { id: 'B-', valencia: 'negativa', content: "Un reportaje periodístico revela que un contrato público fue asignado a una empresa vinculada a familiares de la candidatura y lo atribuye a negligencia y falta de supervisión.", videoUrl: obtenerRutaVideo(p, 'B-', est) },
+        { id: 'B+', valencia: 'positiva', content: "Organizaciones civiles publican un comunicado en el que reconocen el impacto positivo de las iniciativas legislativas de la candidatura.", videoUrl: obtenerRutaVideo(p, 'B+', est) }
     ];
     
     const cycleC = [
         { id: 'C-', valencia: 'negativa', 
           content: isDesmentida ? "Circula en redes sociales un audio que se sospecha generado con inteligencia artificial, en el que se acusa a la candidatura de ordenar de manera deliberada el desvío de fondos. Peritos concluyen que el audio es FALSO." : "Circula en redes sociales un audio que se sospecha generado con inteligencia artificial, en el que se acusa a la candidatura de ordenar de manera deliberada el desvío de fondos. Peritos concluyen que el audio es AUTÉNTICO.", 
-          videoUrl: isDesmentida ? "URL_C_FALSO.mp4" : "URL_C_AUTENTICO.mp4" },
-        { id: 'C+', valencia: 'positiva', content: "La candidatura presenta su plan de infraestructura y salud pública, con financiamiento y presupuesto transparentes.", videoUrl: "URL_VIDEO_C_PLUS.mp4" }
+          videoUrl: obtenerRutaVideo(p, 'C-', est) },
+        { id: 'C+', valencia: 'positiva', content: "La candidatura presenta su plan de infraestructura y salud pública, con financiamiento y presupuesto transparentes.", videoUrl: obtenerRutaVideo(p, 'C+', est) }
     ];
     
     const cycleD = [
         { id: 'D-', valencia: 'negativa', 
           content: isDesmentida ? "Una institución gubernamental publica un informe oficial con pruebas periciales que señala que la candidatura ordenó de manera deliberada la retención de fondos. La institución RETIRA el informe al detectar errores." : "Una institución gubernamental publica un informe oficial con pruebas periciales que señala que la candidatura ordenó de manera deliberada la retención de fondos. Una instancia independiente RATIFICA sus conclusiones.", 
-          videoUrl: isDesmentida ? "URL_D_RETIRADO.mp4" : "URL_D_RATIFICADO.mp4" },
-        { id: 'D+', valencia: 'positiva', content: "La candidatura ofrece una conferencia de prensa en la que reafirma su compromiso con el electorado.", videoUrl: "URL_VIDEO_D_PLUS.mp4" }
+          videoUrl: obtenerRutaVideo(p, 'D-', est) },
+        { id: 'D+', valencia: 'positiva', content: "La candidatura ofrece una conferencia de prensa en la que reafirma su compromiso con el electorado.", videoUrl: obtenerRutaVideo(p, 'D+', est) }
     ];
+    
+    const N10 = { id: 'N10', valencia: 'neutra', content: "La autoridad electoral anuncia la fecha de la elección. Evaluación final.", videoUrl: obtenerRutaVideo(p, 'N10', est) };
 
     if (state.secuencia_ciclos === 'S1') state.newsFlow = [N1, ...cycleA, ...cycleB, ...cycleC, ...cycleD, N10];
     else if (state.secuencia_ciclos === 'S2') state.newsFlow = [N1, ...cycleB, ...cycleD, ...cycleA, ...cycleC, N10];
     else if (state.secuencia_ciclos === 'S3') state.newsFlow = [N1, ...cycleD, ...cycleC, ...cycleB, ...cycleA, N10];
-    else if (state.secuencia_ciclos === 'S4') state.newsFlow = [N1, ...cycleC, ...cycleA, ...cycleD, ...cycleB, N10];
-    else state.newsFlow = [N1, ...cycleA, ...cycleB, ...cycleC, ...cycleD, N10]; // Fallback final
+    else state.newsFlow = [N1, ...cycleC, ...cycleA, ...cycleD, ...cycleB, N10];
 }
 
 function switchScreen(screenId) {
@@ -195,22 +197,19 @@ function acceptConsent() { switchScreen('screen-phase0'); }
 function goToInstructions() { switchScreen('screen-instructions'); }
 
 function startPhase1() {
-    // Si por alguna razon el estado no se guardo correctamente, evita crasheo usando el fallback
     const posturaAUsar = state.postura_candidatura && stancesData[state.postura_candidatura] 
                          ? state.postura_candidatura : 'progresista';
                          
     document.getElementById('dynamic-stance').textContent = stancesData[posturaAUsar];
     
     resetSlider('t0');
-    state.startTime = Date.now();
     switchScreen('screen-phase1');
+    state.startTime = Date.now(); // Inicia tiempo T0
 }
 
 function startPhase2() {
     state.evaluaciones.push({
         momento: 'T0',
-        noticia_codigo: 'Biografia',
-        valencia_noticia: 'neutra',
         valor: document.getElementById('t0-slider').value,
         tiempo_ms: Date.now() - state.startTime
     });
@@ -221,7 +220,6 @@ function startPhase2() {
 }
 
 function loadNewsItem() {
-    // Seguridad adicional si se desborda el indice
     if (!state.newsFlow || state.currentNewsIndex >= state.newsFlow.length) {
         switchScreen('screen-closure');
         return;
@@ -237,20 +235,18 @@ function loadNewsItem() {
         const videoEl = document.getElementById('news-video');
         if(videoEl) {
             videoEl.src = item.videoUrl;
-            videoEl.play().catch(e => console.log("Autoplay bloqueado, requiere clic manual"));
+            videoEl.play().catch(e => console.log("Autoplay bloqueado, requiere clic"));
         }
     }
     
     resetSlider('news');
-    state.startTime = Date.now();
+    state.startTime = Date.now(); // Inicia tiempo T(x) al mostrar la pantalla
 }
 
 function nextNewsItem() {
     const item = state.newsFlow[state.currentNewsIndex];
     state.evaluaciones.push({
         momento: `T${state.currentNewsIndex + 1}`,
-        noticia_codigo: item.id,
-        valencia_noticia: item.valencia,
         valor: document.getElementById('news-slider').value,
         tiempo_ms: Date.now() - state.startTime
     });
