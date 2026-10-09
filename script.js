@@ -1,4 +1,4 @@
-const BACKEND_URL = "TU_URL_DE_APPS_SCRIPT_AQUI"; 
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbzXnQsSpg21rMVIpR80pfRobnWCZZLo62Y2t1bFwtB-_U_MqmjG_BB-mKqCQMrWTI0/exec"; 
 
 const state = {
     id_participante: null,
