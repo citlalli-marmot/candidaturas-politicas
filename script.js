@@ -1,4 +1,4 @@
-const BACKEND_URL = "https://script.google.com/macros/s/AKfycbxYAMcQo_p8q2THz4KraMf5YVSAQgNicvheLN__xrTmDVRWhYf9FftrCm7RhcH1RI7t/exec"; 
+const BACKEND_URL = "https://script.google.com/macros/s/AKfycbyF3peCP_LZaNmf6Xx-svmPE4BY9cjgLZsNzuIhwBQpvH1mpoE8CoAC-S_2s4inJ4z9/exec"; 
 
 const state = {
     id_participante: null,
@@ -20,7 +20,6 @@ const stancesData = {
     conservadora: "«Me identifico con una agenda conservadora. Creo firmemente en la importancia de la familia tradicional y en proteger las instituciones. Apoyo mantener restricciones legales al aborto; el Estado debe proteger la vida desde la concepción.»"
 };
 
-// --- FASE 0 Y ASIGNACIÓN ---
 function validatePhase0() {
     const age = parseInt(document.getElementById('age-input').value, 10);
     const gender = document.getElementById('gender-input').value;
@@ -28,14 +27,17 @@ function validatePhase0() {
     const career = document.getElementById('career-input').value.trim();
     const abortion = document.querySelector('input[name="abortion"]:checked');
 
+    // Validación corregida: Mayor a 18 sin límite superior
     document.getElementById('btn-phase0-next').disabled = 
-        !(age >= 18 && age <= 60 && gender && faculty && career && abortion);
+        !(age >= 18 && gender && faculty && career && abortion);
 }
 
 async function assignCondition() {
     const btnText = document.getElementById('assign-btn-text');
     document.getElementById('btn-phase0-next').disabled = true;
-    btnText.textContent = "Asignando condición...";
+    
+    // Mensaje genérico para no revelar el proceso técnico
+    btnText.textContent = "Cargando instrumento...";
 
     state.demographics = {
         age: document.getElementById('age-input').value,
@@ -55,35 +57,54 @@ async function assignCondition() {
             })
         });
         
-        const data = await response.json();
+        let data = await response.json();
         
+        // SISTEMA ANTI-BLOQUEO: Si el servidor falla o devuelve vacío, asigna una de emergencia.
+        if (!data || !data.postura_candidatura) {
+            console.warn("Fallo de sincronización. Usando asignación local.");
+            data = {
+                id_participante: 'emergencia-' + Date.now(),
+                id_condicion: 'local-1',
+                modalidad: Math.random() > 0.5 ? 'texto' : 'video',
+                postura_candidatura: Math.random() > 0.5 ? 'progresista' : 'conservadora',
+                estatus_acusacion: Math.random() > 0.5 ? 'desmentida' : 'confirmada',
+                secuencia_ciclos: ['S1','S2','S3','S4'][Math.floor(Math.random()*4)]
+            };
+        }
+
         state.id_participante = data.id_participante;
         state.id_condicion = data.id_condicion;
-        state.modalidad = data.modalidad;
-        state.postura_candidatura = data.postura_candidatura;
-        state.estatus_acusacion = data.estatus_acusacion;
-        state.secuencia_ciclos = data.secuencia_ciclos;
+        state.modalidad = String(data.modalidad).trim().toLowerCase();
+        state.postura_candidatura = String(data.postura_candidatura).trim().toLowerCase();
+        state.estatus_acusacion = String(data.estatus_acusacion).trim().toLowerCase();
+        state.secuencia_ciclos = String(data.secuencia_ciclos).trim().toUpperCase();
 
         applyModalityStrictness();
         buildNewsFlow();
         switchScreen('screen-transition');
     } catch (err) {
-        console.error(err);
-        alert("Error de conexión. Por favor verifica tu internet e intenta de nuevo.");
-        btnText.textContent = "Siguiente";
-        document.getElementById('btn-phase0-next').disabled = false;
+        console.error("Error de red:", err);
+        // Fallback extremo por si no hay internet (CORS / Bloqueo)
+        state.id_participante = 'offline-' + Date.now();
+        state.modalidad = 'texto';
+        state.postura_candidatura = 'progresista';
+        state.estatus_acusacion = 'desmentida';
+        state.secuencia_ciclos = 'S1';
+        
+        applyModalityStrictness();
+        buildNewsFlow();
+        switchScreen('screen-transition');
     }
 }
 
-// --- RENDERIZADO EXCLUSIVO (DESTRUCCIÓN DEL DOM) ---
 function applyModalityStrictness() {
     const textContainer = document.getElementById('news-text');
     const videoContainer = document.getElementById('video-container');
     
     if (state.modalidad === 'texto') {
-        videoContainer.parentNode.removeChild(videoContainer); // Destrucción total del video
+        if(videoContainer) videoContainer.parentNode.removeChild(videoContainer);
     } else {
-        textContainer.parentNode.removeChild(textContainer); // Destrucción total del texto
+        if(textContainer) textContainer.parentNode.removeChild(textContainer);
     }
 }
 
@@ -104,7 +125,6 @@ function highlightContent(text) {
         .replace("reafirma", "<span class='highlight-word text-blue-600'>reafirma</span>");
 }
 
-// --- CONSTRUCCIÓN DINÁMICA DEL FLUJO ---
 function buildNewsFlow() {
     const isDesmentida = state.estatus_acusacion === 'desmentida';
 
@@ -120,7 +140,6 @@ function buildNewsFlow() {
         { id: 'B+', valencia: 'positiva', content: "Organizaciones civiles publican un comunicado en el que reconocen el impacto positivo de las iniciativas legislativas de la candidatura.", videoUrl: "URL_VIDEO_B_PLUS.mp4" }
     ];
     
-    // Filtro condicional de estatus C- y D-
     const cycleC = [
         { id: 'C-', valencia: 'negativa', 
           content: isDesmentida ? "Circula en redes sociales un audio que se sospecha generado con inteligencia artificial, en el que se acusa a la candidatura de ordenar de manera deliberada el desvío de fondos. Peritos concluyen que el audio es FALSO." : "Circula en redes sociales un audio que se sospecha generado con inteligencia artificial, en el que se acusa a la candidatura de ordenar de manera deliberada el desvío de fondos. Peritos concluyen que el audio es AUTÉNTICO.", 
@@ -135,14 +154,13 @@ function buildNewsFlow() {
         { id: 'D+', valencia: 'positiva', content: "La candidatura ofrece una conferencia de prensa en la que reafirma su compromiso con el electorado.", videoUrl: "URL_VIDEO_D_PLUS.mp4" }
     ];
 
-    // Cuadrado Latino
     if (state.secuencia_ciclos === 'S1') state.newsFlow = [N1, ...cycleA, ...cycleB, ...cycleC, ...cycleD, N10];
     else if (state.secuencia_ciclos === 'S2') state.newsFlow = [N1, ...cycleB, ...cycleD, ...cycleA, ...cycleC, N10];
     else if (state.secuencia_ciclos === 'S3') state.newsFlow = [N1, ...cycleD, ...cycleC, ...cycleB, ...cycleA, N10];
     else if (state.secuencia_ciclos === 'S4') state.newsFlow = [N1, ...cycleC, ...cycleA, ...cycleD, ...cycleB, N10];
+    else state.newsFlow = [N1, ...cycleA, ...cycleB, ...cycleC, ...cycleD, N10]; // Fallback final
 }
 
-// --- SLIDER Y NAVEGACIÓN ---
 function switchScreen(screenId) {
     document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
     document.getElementById(screenId).classList.add('active');
@@ -154,11 +172,10 @@ function resetSlider(phase) {
     const btn = document.getElementById(phase === 't0' ? 'btn-phase1-next' : 'btn-news-next');
     
     slider.value = 50; 
-    slider.classList.add('no-thumb'); // Oculta el ancla visual
+    slider.classList.add('no-thumb'); 
     display.textContent = "";
     btn.disabled = true;
 
-    // Listener de primer toque
     slider.addEventListener('input', function onFirstInput() {
         slider.classList.remove('no-thumb');
         slider.removeEventListener('input', onFirstInput);
@@ -178,14 +195,18 @@ function acceptConsent() { switchScreen('screen-phase0'); }
 function goToInstructions() { switchScreen('screen-instructions'); }
 
 function startPhase1() {
-    document.getElementById('dynamic-stance').textContent = stancesData[state.postura_candidatura];
+    // Si por alguna razon el estado no se guardo correctamente, evita crasheo usando el fallback
+    const posturaAUsar = state.postura_candidatura && stancesData[state.postura_candidatura] 
+                         ? state.postura_candidatura : 'progresista';
+                         
+    document.getElementById('dynamic-stance').textContent = stancesData[posturaAUsar];
+    
     resetSlider('t0');
     state.startTime = Date.now();
     switchScreen('screen-phase1');
 }
 
 function startPhase2() {
-    // Guarda T0
     state.evaluaciones.push({
         momento: 'T0',
         noticia_codigo: 'Biografia',
@@ -200,15 +221,24 @@ function startPhase2() {
 }
 
 function loadNewsItem() {
+    // Seguridad adicional si se desborda el indice
+    if (!state.newsFlow || state.currentNewsIndex >= state.newsFlow.length) {
+        switchScreen('screen-closure');
+        return;
+    }
+
     const item = state.newsFlow[state.currentNewsIndex];
     document.getElementById('news-counter').textContent = `Noticia ${state.currentNewsIndex + 1} de 10`;
     
     if (state.modalidad === 'texto') {
-        document.getElementById('news-text').innerHTML = highlightContent(item.content);
+        const textEl = document.getElementById('news-text');
+        if(textEl) textEl.innerHTML = highlightContent(item.content);
     } else {
         const videoEl = document.getElementById('news-video');
-        videoEl.src = item.videoUrl;
-        videoEl.play().catch(e => console.log("Autoplay bloqueado"));
+        if(videoEl) {
+            videoEl.src = item.videoUrl;
+            videoEl.play().catch(e => console.log("Autoplay bloqueado, requiere clic manual"));
+        }
     }
     
     resetSlider('news');
@@ -237,7 +267,6 @@ function enableFinish() {
     document.getElementById('btn-finish').disabled = false;
 }
 
-// --- ENVÍO FINAL AL BACKEND ---
 async function finishStudy() {
     const debriefingStep = document.getElementById('debriefing-step');
     const btn = document.getElementById('btn-finish');
@@ -267,11 +296,11 @@ async function finishStudy() {
                 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
                     <div class="bg-white p-8 rounded-2xl shadow-xl max-w-sm text-center border-t-8 border-[#f8c8d8]">
                         <h3 class="text-xl font-bold mb-4 text-gray-800">¡Muchas gracias!</h3>
-                        <p class="text-gray-700 mb-6">Tus datos han sido enviados con éxito. Puedes cerrar esta pestaña.</p>
+                        <p class="text-gray-700 mb-6">Tus datos han sido guardados con éxito en la base de datos. Ya puedes cerrar esta pestaña.</p>
                     </div>
                 </div>`;
         } catch (err) {
-            alert("Error al guardar. Verifica tu conexión a internet.");
+            alert("Error al guardar en el servidor remoto. Intenta de nuevo.");
             btn.disabled = false;
             btn.textContent = "Reintentar envío";
         }
