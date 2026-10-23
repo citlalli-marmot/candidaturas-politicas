@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estudio de Juicios de Confiabilidad - UNAM</title>
+    <title>Estudio de Evaluación Política</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -95,12 +95,14 @@
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-6">
                     <div>
-                        <label class="block text-sm font-semibold text-gray-800 mb-2">Facultad de adscripción</label>
+                        <label class="block text-sm font-semibold text-gray-800 mb-2">Sede / Facultad de adscripción</label>
                         <select id="faculty-input" class="input-ios w-full" onchange="validatePhase0()">
                             <option value="">Selecciona...</option>
-                            <option value="Facultad de Psicología">Facultad de Psicología</option>
-                            <option value="FES Zaragoza">FES Zaragoza</option>
-                            <option value="FES Iztacala">FES Iztacala</option>
+                            <option value="Facultad de Psicología (UNAM)">Facultad de Psicología (UNAM)</option>
+                            <option value="Facultad de Ciencias Políticas y Sociales (UNAM)">Facultad de Ciencias Políticas y Sociales (UNAM)</option>
+                            <option value="FES Zaragoza (UNAM)">FES Zaragoza (UNAM)</option>
+                            <option value="FES Aragón (UNAM)">FES Aragón (UNAM)</option>
+                            <option value="Universidad Iberoamericana (Ibero)">Universidad Iberoamericana (Ibero)</option>
                             <option value="Otra">Otra</option>
                         </select>
                     </div>
@@ -156,15 +158,17 @@
             </div>
         </section>
         
-        <!-- PANTALLA 4: Transición -->
-        <section id="screen-transition" class="screen flex-container p-8 sm:p-12 text-center flex-col justify-center h-full animate-fade-in-up">
-            <div class="my-auto">
-                <div class="w-16 h-16 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+        <!-- PANTALLA 4: Transición (T5: Centrado proporcional) -->
+        <section id="screen-transition" class="screen flex-container h-full flex-col justify-center items-center p-8 sm:p-12 animate-fade-in-up">
+            <div class="text-center w-full max-w-md mx-auto">
+                <div class="w-20 h-20 bg-pink-50 text-pink-500 rounded-full flex items-center justify-center mx-auto mb-8 shadow-sm">
+                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                 </div>
-                <p class="text-gray-900 text-xl font-medium">A continuación se presentará el instrumento de la investigación.</p>
+                <p class="text-gray-900 text-xl sm:text-2xl font-medium mb-10">A continuación se presentará el instrumento de la investigación.</p>
+                <button onclick="goToInstructions()" class="btn-primary w-full sm:w-auto px-10 py-4 rounded-2xl text-lg shadow-md">
+                    Pasar a las instrucciones
+                </button>
             </div>
-            <button onclick="goToInstructions()" class="btn-primary w-full px-10 py-4 rounded-2xl text-lg mt-8">Pasar a las instrucciones</button>
         </section>
 
         <!-- PANTALLA 5: Instrucciones -->
@@ -175,12 +179,12 @@
                 <ol class="list-decimal pl-5 space-y-3 font-medium text-gray-800">
                     <li>Primero, leerás una breve <strong>biografía</strong> de la candidatura y registrarás tu nivel de confianza inicial.</li>
                     <li>Después, se te presentará una secuencia de <strong>10 noticias sucesivas</strong>.</li>
-                    <li>Tras revisar cada noticia, deberás ajustar el <strong>deslizador en pantalla (de 0 a 100)</strong> para indicar qué tan confiable te parece la candidatura <em>tomando en cuenta la información que acabas de recibir</em>.</li>
+                    <li>Tras revisar cada noticia (video o texto), deberás ajustar el <strong>deslizador en pantalla (de 0 a 100)</strong> para indicar qué tan confiable te parece la candidatura <em>tomando en cuenta la información que acabas de recibir</em>.</li>
                 </ol>
                 
                 <div class="mt-4 p-4 bg-pink-50 border-l-4 border-pink-400 rounded-r-lg text-sm text-gray-800 shadow-sm text-justify">
-                    <strong>💡 IMPORTANTE SOBRE EL DESLIZADOR:</strong><br>
-                    Para evitar influir en tu respuesta, el círculo del deslizador <em>estará oculto inicialmente</em>. <strong>Debes hacer clic o tocar en cualquier parte de la línea gris</strong> para que aparezca, y posteriormente podrás arrastrarlo a la posición que desees. No podrás avanzar hasta que registres tu respuesta.
+                    <strong>💡 IMPORTANTE:</strong><br>
+                    Deberás esperar a que finalice el video (o el tiempo de lectura) para poder registrar tu respuesta. Para evitar influir en tu juicio, el círculo del deslizador <em>estará oculto inicialmente</em>. <strong>Toca en cualquier parte de la línea gris</strong> para que aparezca, y luego arrástralo a la posición que desees.
                 </div>
             </div>
             <div class="mt-8 text-right">
@@ -210,8 +214,9 @@
                         <span>Nada confiable (0)</span><span>Totalmente confiable (100)</span>
                     </div>
                 </div>
-                <div class="text-center mt-6 h-8">
-                    <span id="t0-value-display" class="text-3xl font-bold text-[#f8c8d8]"></span>
+                <!-- T7: Color modificado #D81B60 y fuente más gruesa -->
+                <div class="text-center mt-6 h-10">
+                    <span id="t0-value-display" class="text-4xl font-extrabold text-[#D81B60]"></span>
                 </div>
             </div>
 
@@ -228,26 +233,35 @@
             </div>
             
             <div id="news-content-container" class="bg-gray-50 border border-gray-200 shadow-inner rounded-2xl p-6 sm:p-8 mb-8 min-h-[180px] flex flex-col justify-center">
-                <div id="video-container" class="mb-4 rounded-xl overflow-hidden shadow-sm bg-black">
-                    <video id="news-video" controls playsinline preload="auto" class="w-full max-h-64 object-cover">
-                        Tu navegador no soporta el elemento de video.
-                    </video>
+                
+                <div id="video-container" class="mb-4 rounded-xl overflow-hidden shadow-sm bg-black relative">
+                    <!-- T6: Overlay para Play y sin controles -->
+                    <div id="video-overlay" class="video-overlay" onclick="playCurrentVideo()">
+                        <div class="play-btn"></div>
+                    </div>
+                    <video id="news-video" playsinline preload="auto" class="w-full max-h-64 object-cover" onended="enableNewsEvaluation()"></video>
                 </div>
-                <p id="news-text" class="text-gray-900 text-base sm:text-lg leading-relaxed text-center font-medium"></p>
+                
+                <div id="news-text-container" class="hidden flex-col items-center justify-center">
+                    <p id="news-text" class="text-gray-900 text-base sm:text-lg leading-relaxed text-center font-medium"></p>
+                    <p id="text-timer-msg" class="text-xs text-gray-500 mt-4 italic">Por favor, lee la información detenidamente...</p>
+                </div>
+                <p id="video-error-msg" class="text-red-500 text-sm text-center hidden mt-2">Hubo un problema al cargar el video. Por favor, continúa.</p>
             </div>
 
             <div class="eval-container border-t border-gray-200 pt-6">
                 <label class="block text-center text-lg font-semibold text-gray-900 mb-1">Tras esta información, ¿qué tan confiable consideras a la candidatura?</label>
-                <p class="text-center text-sm text-pink-600 mb-4 font-medium">1. Toca la línea gris para activar el indicador &nbsp;•&nbsp; 2. Arrástralo a tu respuesta</p>
+                <p class="text-center text-sm text-pink-600 mb-4 font-medium">Espera a que termine la información para evaluar</p>
                 
                 <div class="relative px-2 mt-4">
-                    <input type="range" id="news-slider" min="0" max="100" value="50" oninput="updateSliderValue('news')" class="no-thumb">
+                    <input type="range" id="news-slider" min="0" max="100" value="50" oninput="updateSliderValue('news')" class="no-thumb" disabled>
                     <div class="flex justify-between text-xs text-gray-500 mt-2 font-medium">
                         <span>Nada confiable (0)</span><span>Totalmente confiable (100)</span>
                     </div>
                 </div>
-                <div class="text-center mt-6 h-8">
-                    <span id="news-value-display" class="text-3xl font-bold text-[#f8c8d8]"></span>
+                <!-- T7: Color modificado #D81B60 y fuente más gruesa -->
+                <div class="text-center mt-6 h-10">
+                    <span id="news-value-display" class="text-4xl font-extrabold text-[#D81B60]"></span>
                 </div>
             </div>
 
@@ -261,16 +275,10 @@
             <h2 class="text-2xl font-bold mb-6 text-center text-gray-900">Verificación</h2>
             
             <div id="verification-step" class="mb-8">
-                <p class="text-gray-900 mb-6 font-medium bg-yellow-50 p-4 border border-yellow-200 rounded-xl shadow-sm text-center text-lg">¿Qué postura ideológica declaró tener la candidatura al principio?</p>
-                <div class="space-y-4">
-                    <label class="flex p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-pink-50 transition shadow-sm bg-white">
-                        <input type="radio" name="verification" value="progresista" class="mr-4 mt-1 w-5 h-5 accent-pink-500" onchange="enableFinish()">
-                        <span class="text-gray-800"><strong>Progresista</strong> (A favor de la interrupción legal del embarazo)</span>
-                    </label>
-                    <label class="flex p-4 border border-gray-200 rounded-xl cursor-pointer hover:bg-pink-50 transition shadow-sm bg-white">
-                        <input type="radio" name="verification" value="conservadora" class="mr-4 mt-1 w-5 h-5 accent-pink-500" onchange="enableFinish()">
-                        <span class="text-gray-800"><strong>Conservadora</strong> (A favor de mantener restricciones legales)</span>
-                    </label>
+                <!-- T2: Cambio de pregunta y opciones inyectadas dinámicamente -->
+                <p class="text-gray-900 mb-6 font-medium bg-yellow-50 p-4 border border-yellow-200 rounded-xl shadow-sm text-center text-lg">¿Cuál era la postura de la candidatura sobre el aborto?</p>
+                <div id="verification-options" class="space-y-4">
+                    <!-- Se llena desde script.js para aleatorizar -->
                 </div>
             </div>
 
@@ -279,7 +287,7 @@
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     Información Importante
                 </h3>
-                <p class="mb-3">Muchas gracias por tu valiosa participación. Es importante aclararte que la candidatura "Martínez", así como <strong>todas las noticias, videos, audios generados por IA e informes gubernamentales</strong> presentados en este estudio son <strong>completamente ficticios</strong>.</p>
+                <p class="mb-3">Muchas gracias por tu valiosa participación. Es importante aclararte que la candidatura "Martínez", así como <strong>todas las noticias, videos, audios e informes gubernamentales</strong> presentados en este estudio son <strong>completamente ficticios</strong>.</p>
                 <p>Fueron creados por el equipo de investigación exclusivamente para comprender cómo las personas evalúan flujos secuenciales de información de distinta severidad. Ninguno de los eventos o personajes descritos existe en la realidad.</p>
             </div>
 
@@ -289,6 +297,18 @@
         </section>
 
     </main>
+
+    <!-- Overlay para modo revisión -->
+    <div id="revision-overlay" class="fixed inset-0 bg-gray-900 bg-opacity-95 text-white z-[9999] hidden flex-col p-8 overflow-y-auto">
+        <h1 class="text-2xl font-bold mb-4">Modo Revisión de Videos (GitHub Pages)</h1>
+        <p class="mb-4 text-sm text-gray-300">Verificando existencia de archivos en la carpeta <code>videos/</code>...</p>
+        <table class="w-full max-w-3xl border-collapse border border-gray-600">
+            <thead><tr class="bg-gray-800"><th class="border border-gray-600 p-2">Archivo Esperado</th><th class="border border-gray-600 p-2">Estado</th></tr></thead>
+            <tbody id="revision-table-body"></tbody>
+        </table>
+        <button onclick="document.getElementById('revision-overlay').style.display='none'" class="mt-6 bg-blue-600 px-6 py-2 rounded">Cerrar Revisión</button>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>
