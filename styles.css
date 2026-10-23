@@ -56,6 +56,11 @@ input[type=range] {
     background: transparent;
 }
 
+input[type=range]:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
 input[type=range]::-webkit-slider-thumb {
     -webkit-appearance: none;
     height: 26px;
@@ -69,6 +74,10 @@ input[type=range]::-webkit-slider-thumb {
     transition: opacity 0.2s;
 }
 
+input[type=range]:disabled::-webkit-slider-thumb {
+    cursor: not-allowed;
+}
+
 input[type=range]::-webkit-slider-runnable-track {
     width: 100%;
     height: 6px;
@@ -78,12 +87,8 @@ input[type=range]::-webkit-slider-runnable-track {
 }
 
 /* Ocultar el thumb inicial para no tener anclaje (Hasta el primer clic) */
-input[type=range].no-thumb::-webkit-slider-thumb {
-    opacity: 0;
-}
-input[type=range].no-thumb::-moz-range-thumb {
-    opacity: 0;
-}
+input[type=range].no-thumb::-webkit-slider-thumb { opacity: 0; }
+input[type=range].no-thumb::-moz-range-thumb { opacity: 0; }
 
 .input-ios {
     background-color: #f3f4f6;
@@ -102,9 +107,6 @@ input[type=range].no-thumb::-moz-range-thumb {
     border-color: var(--primary-pastel);
     box-shadow: 0 0 0 3px rgba(248, 200, 216, 0.3);
 }
-
-.slider-value-hidden { opacity: 0; transition: opacity 0.3s; }
-.slider-value-visible { opacity: 1; }
 
 .hidden-wrapper .reveal-content {
     opacity: 0;
@@ -139,4 +141,37 @@ input[type=range].no-thumb::-moz-range-thumb {
     transition: all 0.3s ease;
     padding: 0 2px;
     border-radius: 4px;
+}
+
+/* Overlay para reproducir video */
+.video-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: opacity 0.3s;
+}
+.video-overlay.hidden { display: none; }
+.play-btn {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.9);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+.play-btn::after {
+    content: '';
+    width: 0;
+    height: 0;
+    border-top: 12px solid transparent;
+    border-left: 20px solid #D81B60; /* Color primario intenso */
+    border-bottom: 12px solid transparent;
+    margin-left: 5px;
 }
